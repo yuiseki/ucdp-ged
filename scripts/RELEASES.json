@@ -10,5 +10,41 @@
   "csv_zip": "https://ucdp.uu.se/downloads/ged/ged251-csv.zip",
   "codebook": "https://ucdp.uu.se/downloads/ged/ged251.pdf",
   "member": "GEDEvent_v25_1.csv"
+ },
+ "24.1": {
+  "page": "https://ucdp.uu.se/downloads/olddw.html",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged241-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged241.pdf",
+  "member": "GEDEvent_v24_1.csv"
+ },
+ "23.1": {
+  "page": "https://ucdp.uu.se/downloads/olddw.html",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged231-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged231.pdf",
+  "member": "GEDEvent_v23_1.csv"
+ },
+ "22.1": {
+  "page": "https://ucdp.uu.se/downloads/olddw.html",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged221-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged221.pdf",
+  "member": "GEDEvent_v22_1.csv"
+ },
+ "21.1": {
+  "page": "https://ucdp.uu.se/downloads/olddw.html",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged211-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged211.pdf",
+  "member": "ged211.csv"
+ },
+ "20.1": {
+  "page": "https://ucdp.uu.se/downloads/olddw.html",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged201-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged201.pdf",
+  "member": "ged201.csv"
+ },
+ "19.1": {
+  "page": "https://ucdp.uu.se/downloads/olddw.html",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged191-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged191.pdf",
+  "member": "ged191.csv"
  }
 }

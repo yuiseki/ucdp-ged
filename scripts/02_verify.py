@@ -31,7 +31,12 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
 PQ = ROOT / "data" / "parquet"
 RELEASES = ROOT / "scripts" / "RELEASES.json"
-EXPECTED_ROWS = {"26.1": 417968, "25.1": 385918}
+EXPECTED_ROWS = {
+    "26.1": 417968, "25.1": 385918, "24.1": 349733, "23.1": 316818,
+    "22.1": 293634, "21.1": 261864, "20.1": 225385, "19.1": 152616,
+}  # fmt: skip
+# 19.1 leaves Syria out by design (its codebook; a separate Syria release
+# exists), so the plain-DuckDB check counts Afghanistan, which every release has.
 # two boxes to compare a filter on the geometry with one on the coordinates; the
 # second takes in Japan and its surroundings (26.1 has two events there, both
 # in Primorsky Krai, Russia)
@@ -120,8 +125,8 @@ def main() -> int:
               f"{version}: best {best:,}, civilians {civ:,}, by type {by_type} as in the CSV")  # fmt: skip
 
         plain = duckdb.connect()
-        n = plain.sql(f"select count(*) from '{p}' where country = 'Syria'").fetchone()[0]
-        check(n > 0, f"{version}: a DuckDB without spatial opens it ({n:,} Syrian events)")
+        n = plain.sql(f"select count(*) from '{p}' where country = 'Afghanistan'").fetchone()[0]
+        check(n > 0, f"{version}: a DuckDB without spatial opens it ({n:,} Afghan events)")
 
         bloom = con.sql(
             f"select count(*) filter (where bloom_filter_offset is not null) from parquet_metadata('{p}')"

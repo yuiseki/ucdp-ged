@@ -22,10 +22,11 @@ The Parquet under parquet/<version>/ was made from the CSV in the zip:
 
   - columns were typed by name (ids, counts and deaths as integers, latitude
     and longitude as floats, date_start and date_end as timestamps,
-    active_year as a boolean); every other column is the text of the CSV
+    active_year as an integer 1 or 0, the true and false of the 25.1 and
+    26.1 CSVs read as 1 and 0); every other column is the text of the CSV
   - a point geometry (WGS 84) was added from longitude and latitude
   - rows were sorted by country_id, date_start and id
-  - values were not changed
+  - no other value was changed
 
 The source_* columns quote news reports (outlet, date, headline) as UCDP
 distributes them. Whether UCDP holds the rights to license those headlines

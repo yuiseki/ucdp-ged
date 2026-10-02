@@ -21,7 +21,7 @@ _spec.loader.exec_module(m)
         ("best", "BIGINT"),
         ("latitude", "DOUBLE"),
         ("date_start", "TIMESTAMP"),
-        ("active_year", "BOOLEAN"),
+        ("active_year", "INTEGER"),
         ("gwnoa", "VARCHAR"),
         ("gwnob", "VARCHAR"),
         ("relid", "VARCHAR"),
@@ -49,7 +49,7 @@ def test_values_are_typed_and_text_stays_text(tmp_path):
         tmp_path, HEADER + '1,SYR-2015,true,34.75,43.65,2015-02-12 00:00:00.000,"2;200;900",6\n'
     )
     row = dict(zip(rel.columns, rel.fetchone(), strict=True))
-    assert row["id"] == 1 and row["best"] == 6 and row["active_year"] is True
+    assert row["id"] == 1 and row["best"] == 6 and row["active_year"] == 1
     assert row["gwnoa"] == "2;200;900" and row["relid"] == "SYR-2015"
     assert str(row["date_start"]) == "2015-02-12 00:00:00"
     assert rel.select("st_astext(geometry)").fetchone() == ("POINT (43.65 34.75)",)
@@ -61,7 +61,7 @@ def test_values_are_typed_and_text_stays_text(tmp_path):
         ("1,R,true,34.75,43.65,2015-02-12 00:00:00.000,652,6.5\n", "best is not an integer: 6.5"),
         (
             "1,R,yes,34.75,43.65,2015-02-12 00:00:00.000,652,6\n",
-            "active_year is not true or false: yes",
+            "active_year is not 1, 0, true or false: yes",
         ),
         ("1,R,true,north,43.65,2015-02-12 00:00:00.000,652,6\n", "latitude is not a number: north"),
         ("1,R,true,34.75,43.65,12/02/2015,652,6\n", "date_start is not a timestamp: 12/02/2015"),
@@ -70,3 +70,16 @@ def test_values_are_typed_and_text_stays_text(tmp_path):
 def test_a_value_that_does_not_fit_stops_the_run(tmp_path, line, message):
     with pytest.raises(duckdb.Error, match=message):
         _rel(tmp_path, HEADER + line).fetchall()
+
+
+@pytest.mark.parametrize(("value", "want"), [("1", 1), ("0", 0), ("true", 1), ("false", 0)])
+def test_active_year_is_the_codebook_integer(tmp_path, value, want):
+    # The codebooks define 1 and 0; the CSVs of 25.1 and 26.1 write true and false.
+    rel = _rel(tmp_path, HEADER + f"1,R,{value},34.75,43.65,2015-02-12 00:00:00.000,652,6\n")
+    assert rel.select("active_year").fetchone() == (want,)
+
+
+def test_a_date_without_a_time_is_read(tmp_path):
+    # 19.1 writes date_start as 2019-01-01, later releases with a time of day.
+    rel = _rel(tmp_path, HEADER + "1,R,1,34.75,43.65,2019-01-01,652,6\n")
+    assert str(rel.select("date_start").fetchone()[0]) == "2019-01-01 00:00:00"

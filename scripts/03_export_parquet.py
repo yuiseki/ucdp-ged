@@ -4,7 +4,8 @@
 The type of a column comes from its name, never from inference: DuckDB's
 inferrer stops at row 138,884 of 25.1, where gwnoa holds '2;200;900'. Ids,
 counts and deaths are BIGINT, latitude and longitude DOUBLE, date_start and
-date_end TIMESTAMP, active_year BOOLEAN; everything else stays the text of
+date_end TIMESTAMP, active_year INTEGER (the codebooks' 1 and 0; the CSVs of
+25.1 and 26.1 write true and false, read as 1 and 0); everything else stays the text of
 the CSV, including gwnoa and gwnob, which can hold lists. A column this rule
 does not know, as older releases may have, is kept as text. A value that does
 not fit its type stops the run instead of being rounded or nulled.
@@ -44,7 +45,7 @@ def column_type(name: str) -> str:
     if name in ("date_start", "date_end"):
         return "TIMESTAMP"
     if name == "active_year":
-        return "BOOLEAN"
+        return "INTEGER"
     return "VARCHAR"
 
 
@@ -62,7 +63,12 @@ def _expr(path: Path, name: str) -> str:
             "a timestamp",
         )
     else:
-        ok, what = f"{c} in ('true', 'false')", "true or false"
+        # The codebooks define 1 and 0; the CSVs of 25.1 and 26.1 write true and false.
+        return (
+            f"case when {c} is null then null when {c} in ('1', 'true') then 1 "
+            f"when {c} in ('0', 'false') then 0 "
+            f"else error('{path.name}: {name} is not 1, 0, true or false: ' || {c}) end"
+        )
     return (
         f"case when {c} is null then null when {ok} then cast({c} as {t}) "
         f"else error('{path.name}: {name} is not {what}: ' || {c}) end"
