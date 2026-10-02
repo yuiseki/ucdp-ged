@@ -1,0 +1,14 @@
+{
+ "26.1": {
+  "page": "https://ucdp.uu.se/downloads/",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged261-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged261.pdf",
+  "member": "GEDEvent_v26_1.csv"
+ },
+ "25.1": {
+  "page": "https://ucdp.uu.se/downloads/olddw.html",
+  "csv_zip": "https://ucdp.uu.se/downloads/ged/ged251-csv.zip",
+  "codebook": "https://ucdp.uu.se/downloads/ged/ged251.pdf",
+  "member": "GEDEvent_v25_1.csv"
+ }
+}

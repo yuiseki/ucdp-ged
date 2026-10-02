@@ -1,0 +1,58 @@
+# Where this data comes from and what was done to it.
+
+source:
+  name: UCDP Georeferenced Event Dataset (GED)
+  publisher: Uppsala Conflict Data Program, Department of Peace and Conflict Research, Uppsala University
+  downloads: https://ucdp.uu.se/downloads/
+  archive: https://ucdp.uu.se/downloads/olddw.html
+  licence:
+    applied: CC BY 4.0 (UCDP download page, read 2026-10-02)
+    attribution_required: true
+    citation_required: the publications listed with each release
+    share_alike: false
+    other_labels: HDX lists country extracts of UCDP data as cc-by-igo
+
+releases:
+  note: |
+    UCDP publishes one release a year; each is a subset here, named by its
+    version. Monthly candidate releases are not taken. The files were
+    fetched on 2026-10-02; their sha256 matched the copies kept on
+    z.yuiseki.net since 2026-09-28 (25.1) and 2026-10-02 (26.1).
+  "26.1":
+    zip: {file: ged261-csv.zip, bytes: 39122522, last_modified: "Mon, 08 Jun 2026 19:54:24 GMT"}
+    codebook: {file: ged261.pdf, bytes: 917038, last_modified: "Wed, 20 May 2026 09:54:52 GMT"}
+    events: 417968
+    period: 1989-01-01 to 2025-12-31
+    countries: 126
+    best_total: 4257891
+    civilian_deaths_total: 1570458
+    by_type_of_violence: {1: 292121, 2: 61451, 3: 64396}
+  "25.1":
+    zip: {file: ged251-csv.zip, bytes: 29307888, last_modified: "Wed, 11 Jun 2025 09:43:52 GMT"}
+    codebook: {file: ged251.pdf, bytes: 813249, last_modified: "Wed, 18 Jun 2025 08:54:31 GMT"}
+    events: 385918
+    period: 1989-01-01 to 2024-12-31
+    countries: 124
+    best_total: 3957143
+    civilian_deaths_total: 1474095
+    by_type_of_violence: {1: 271331, 2: 54982, 3: 59605}
+
+checked:
+  note: scripts/02_verify.py, with DuckDB, before upload
+  items:
+    - zip and codebook against MANIFEST.json
+    - pinned row count and every id once
+    - every column of the type its name gives
+    - GeoParquet 1.0.0 with a Point on every row
+    - geometry filter and coordinate filter return the same events
+    - totals of best and deaths_civilians and counts by type equal those counted from the CSV with Python's csv module
+    - a DuckDB without the spatial extension opens the file
+    - no bloom filters
+
+modifications:
+  raw: none. UCDP's zip and codebook, byte for byte.
+  parquet:
+    - columns typed by name; a value that does not fit stops the build
+    - a point geometry added from longitude and latitude
+    - sorted by country_id, date_start, id
+    - written without bloom filters

@@ -1,0 +1,11 @@
+# The data itself lives on the Hugging Face Hub, not in git:
+#   https://huggingface.co/datasets/yuiseki/ucdp-ged
+# data/README.md, data/LICENSE and data/provenance.yaml are tracked.
+data/raw/
+data/parquet/
+data/work/
+data/*.log
+
+__pycache__/
+*.pyc
+.venv/
